@@ -8,4 +8,4 @@ internal class IosDispatcher: Dispatcher{
         get() = Dispatchers.Default
 }
 
-internal actual fun provideDispatcher(): Dispatcher = IosDispatcher()
+    internal actual fun provideDispatcher(): Dispatcher = IosDispatcher()

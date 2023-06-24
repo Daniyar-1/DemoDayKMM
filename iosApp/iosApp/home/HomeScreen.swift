@@ -1,60 +1,98 @@
-//
-//  ContentViewModel.swift
-//  iosApp
-//
-//  Created by Patrick Ngoyi Dipumba on 21/02/2023.
-//  Copyright © 2023 orgName. All rights reserved.
-//
 
 import SwiftUI
 import shared
 
 struct HomeScreen: View {
-    @StateObject var viewModel = HomeViewModel()
+    let networkManager = NetworkManager.shared
+    @Binding var name: String
+    @Binding var password: String
+    @Binding var confirm: String
     
-    let gridColumns: [GridItem] = Array(repeating: GridItem(.flexible(), spacing: 16), count: 2)
+    @State private var errorDescription = ""
+    @State private var showAlert = false
+    
+    @Binding var signedUp: Bool
     
     var body: some View {
-        NavigationStack{
+        VStack(spacing: 0) {
+            Text("Регистрация")
+                .font(.system(size: 22))
+                .padding(.bottom, 12)
             
-            ScrollView{
-                LazyVGrid(columns: gridColumns, spacing: 16){
-                    
-                    ForEach(viewModel.movies, id: \.id){movie in
-                        
-                        NavigationLink(value: movie){
-                            MovieGridItem(movie: movie)
-                                .task {
-                                    if movie == viewModel.movies.last && !viewModel.isLoading && !viewModel.loadFinished {
-                                        await viewModel.loadMovies()
-                                    }
-                                }
-                        }
-                        .buttonStyle(PlainButtonStyle())
-                    }
-                    
-                    if viewModel.isLoading {
-                        Section(footer: ProgressView()){}
-                    }
-                    
-                }
-                .padding(.horizontal, 12)
-                .navigationDestination(for: Movie.self){movie in
-                    DetailScreen(movie: movie)
+            VStack(spacing: 8.5) {
+                AppTextField(
+                    title: "Имя",
+                    text: $name
+                )
+                AppTextField(
+                    title: "Пароль",
+                    text: $password
+                )
+                AppTextField(
+                    title: "Введите пароль еще раз",
+                    text: $confirm
+                )
+            }
+            .padding(.bottom, 28.75)
+            
+            Button {
+                // Валидация полей
+                guard !name.isEmpty, !password.isEmpty, !confirm.isEmpty else {
+                    showAlert = true
+                    errorDescription = "Все поля должны быть заполнены!"
+                    return
                 }
                 
-            }
-            .navigationTitle("Movies")
-            
-        }
-        .task {
-            await viewModel.loadMovies()
-        }
-    }
-}
+                guard password == confirm else {
+                    showAlert = true
+                    errorDescription = "Пароли должны совпадать!"
+                    return
+                }
+                
+//                // Отправка запроса на регистрацию
+//                networkManager.registerUser(name: name, password: password) { success, error in
+//
+//                    // Если возникли ошибки при ответе на запрос
+//                    if let error = error {
+//                        // Задаем описание ошибки для нашего всплывающего предупреждения
+//                        if let apiError = error as? ApiError {
+//                            errorDescription = apiError.description
+//                        } else {
+//                            errorDescription = error.localizedDescription
+//                        }
+//
+//                        // И говорим, что будем показывать алерт
+//                        showAlert = true
+//                    }
 
-struct HomeScreen_Previews: PreviewProvider {
-    static var previews: some View {
-        HomeScreen()
+                    // А если все прошло успешно, устанавливаем флажок signedUp на true
+//                    if success {
+//                        showAlert = false
+//                        signedUp = true
+//                    }
+//                }
+                signedUp = true
+                
+            } label: {
+                Text("Зарегистрироваться")
+                    .padding()
+                    .background(.white)
+                    .foregroundColor(.black)
+            }
+        }
+        .alert(isPresented: $showAlert) {
+            Alert(
+                title: Text("Ошибка ⚠️"),
+                message: Text(errorDescription)
+            )
+        }
+        .padding(.horizontal, 25)
+        .padding(.top, 58)
+        .padding(.bottom, 116)
+        .background(
+            VisualEffect(style: .systemUltraThinMaterial)
+                .opacity(0.8)
+        )
+        
     }
 }

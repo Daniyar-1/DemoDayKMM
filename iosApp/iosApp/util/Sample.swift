@@ -1,10 +1,3 @@
-//
-//  Sample.swift
-//  iosApp
-//
-//  Created by Patrick Ngoyi Dipumba on 21/02/2023.
-//  Copyright © 2023 orgName. All rights reserved.
-//
 
 import Foundation
 import shared

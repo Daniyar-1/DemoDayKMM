@@ -56,4 +56,22 @@ dependencies {
     implementation("io.coil-kt:coil-compose:$coilVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
     implementation("androidx.navigation:navigation-compose:$navVersion")
+
+
+    //retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+
+    //Koin
+    implementation("io.insert-koin:koin-core:3.3.2")
+    implementation ("io.insert-koin:koin-android:3.3.2")
+    implementation ("io.insert-koin:koin-androidx-compose:3.4.1")
+
+    //Interceptor
+    implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.10")
+
+    //    //LiveData
+    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.6.1")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
 }
